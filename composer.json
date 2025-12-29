@@ -1,0 +1,17 @@
+{
+    "name": "angee/login",
+    "autoload": {
+        "psr-4": {
+            "Angee\\Login\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "",
+            "email": ""
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

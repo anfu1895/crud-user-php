@@ -1,21 +1,24 @@
 <?php
   require_once __DIR__ . '/../config/db.php';
 
+  $errors = [];
+
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['username'], $_POST['email'], $_POST['password'])) {
       if( empty(trim($_POST['username'])) || empty(trim($_POST['email'])) || empty(trim($_POST['password'])) ) {
-        die("Por favor, complete todos los campos.");
+        $errors[] = "Todos los campos son obligatorios.";
       }
 
       $username = $_POST['username'];
       $email = $_POST['email'];
-      $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
+      
       $stmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE email = :email');
       $stmt->execute([':email' => $_POST['email']]);
       if ($stmt->fetchColumn() > 0) {
-        die("El email ya está registrado.");
+        $errors[] = "El email ya está registrado.";
       }
+
+      $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
       $stmt = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password)');
       $stmt->execute([

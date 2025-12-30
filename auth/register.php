@@ -11,23 +11,26 @@
 
       $username = $_POST['username'];
       $email = $_POST['email'];
-      
-      $stmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE email = :email');
-      $stmt->execute([':email' => $_POST['email']]);
-      if ($stmt->fetchColumn() > 0) {
-        $errors[] = "El email ya está registrado.";
+
+      if (empty($errors)) {
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE email = :email');
+        $stmt->execute([':email' => $email]);
+        
+        if ($stmt->fetchColumn() > 0) {
+          $errors[] = "El email ya está registrado.";
+        }
       }
 
-      $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+      if (empty($errors)) {
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-      $stmt = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password)');
-      $stmt->execute([
-        ':username' => $username,
-        ':email' => $email,
-        ':password' => $password
-      ]);
-
-      echo "Usuario registrado con éxito.";
+        $stmt = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password)');
+        $stmt->execute([
+          ':username' => $username,
+          ':email' => $email,
+          ':password' => $password
+        ]);
+      }
     }
   }
 ?>
@@ -40,6 +43,13 @@
   <title>Document</title>
 </head>
 <body>
+  <?php if (!empty($errors)): ?>
+      <ul style="color: red;">
+        <?php foreach ($errors as $error): ?>
+          <li><?= htmlspecialchars($error) ?></li>
+        <?php endforeach; ?>
+      </ul>
+  <?php endif; ?>
   <form action="" method="post">
 
     <label for="username">Nombre de usuario:</label>

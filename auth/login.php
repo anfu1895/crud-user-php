@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       $_SESSION['user'] = [
         'id' => $user['id'],
-        'name' => $user['name'],
+        'name' => $user['username'],
         'email' => $email
       ];
 

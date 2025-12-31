@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../auth/auth.php';
-require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/auth/auth.php';
+require_once __DIR__ . '/config/db.php';
 
 ?>
 
@@ -15,7 +15,7 @@ require_once __DIR__ . '/../config/db.php';
 <body>
   <h1>Bienvenido al Dashboard</h1>
   <p>Usuario: <?= htmlspecialchars($_SESSION['user']['name']) ?></p>
-  <a href="../auth/logout.php">Cerrar sesión</a>
+  <a href="./auth/logout.php">Cerrar sesión</a>
 </body>
 </html>
 

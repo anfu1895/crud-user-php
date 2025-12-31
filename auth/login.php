@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
 
-        if (!empty($user) || !password_verify($password, $user['password'])) {
+        if (!$user || !password_verify($password, $user['password'])) {
           $errors[] = 'credenciales incorrectas.';
         }
       }
@@ -40,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 }
+
+$flashErrors = $_SESSION['flash']['errors'] ?? [];
+unset($_SESSION['flash']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -49,6 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Document</title>
 </head>
 <body>
+  <?php foreach ($flashErrors as $error): ?>
+    <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+  <?php endforeach; ?>
   <form action="" method="post">
     <label for="email">email:</label>
     <input type="email" id="email" name="email" required>

@@ -31,10 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'id' => $user['id'],
         'name' => $user['name'],
         'email' => $email
-      ]
+      ];
+
+      header('Location: ../dashboard.php', true, 303);
+      exit();
+    } else {
+      $errors[] = "Todos los campos son obligatorios.";
     }
-  } else {
-    $errors[] = "Todos los campos son obligatorios.";
   }
 }
 ?>

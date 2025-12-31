@@ -3,6 +3,7 @@ require_once __DIR__.'/../config/db.php';
 
 session_start();
 
+$erros = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['email'], $_POST['password'])) {
@@ -10,12 +11,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $email = $_POST['email'];
       $password = $_POST['password'];
 
-      $stmt = $pdo->prepare('SELECT id, name, password FROM users WHERE email = :email');
-      $stmt->execute([':email' => $email]);
-      $user = $stmt->fetch();
+      if (empty($errors)) {
+        $stmt = $pdo->prepare('SELECT id, name, password FROM users WHERE email = :email LIMIT 1');
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch();
 
-      
+        if (!empty($user) || !password_verify($password, $user['password'])) {
+          $errors[] = 'credenciales incorrectas.';
+        }
+      }
+
+      if (!empty($errors)) {
+        $_SESSION['flash']['erros'] = $errors;
+        header('Location: login.php', true, 303);
+        exit();
+      }
+
+      $_SESSION['user'] = [
+        'id' => $user['id'],
+        'name' => $user['name'],
+        'email' => $email
+      ]
     }
+  } else {
+    $errors[] = "Todos los campos son obligatorios.";
   }
 }
 ?>

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $password = $_POST['password'];
 
       if (empty($errors)) {
-        $stmt = $pdo->prepare('SELECT id, name, password FROM users WHERE email = :email LIMIT 1');
+        $stmt = $pdo->prepare('SELECT id, username, password FROM users WHERE email = :email LIMIT 1');
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
 
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       if (!empty($errors)) {
-        $_SESSION['flash']['erros'] = $errors;
+        $_SESSION['flash']['errors'] = $errors;
         header('Location: login.php', true, 303);
         exit();
       }

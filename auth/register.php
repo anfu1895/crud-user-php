@@ -53,9 +53,6 @@
         <?php endforeach; ?>
       </ul>
   <?php endif; ?>
-  <?php if ($success): ?>
-      <p style="color: green;">Registro exitoso. <a href="login.php">Iniciar sesión</a></p>
-  <?php endif; ?>
   <form action="" method="post">
 
     <label for="username">Nombre de usuario:</label>

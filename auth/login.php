@@ -12,7 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $password = $_POST['password'];
 
       if (empty($errors)) {
-        $stmt = $pdo->prepare('SELECT id, username, password FROM users WHERE email = :email LIMIT 1');
+        $stmt = $pdo->prepare(
+          'SELECT users.id, users.username, users.password, roles.name AS role
+          FROM users JOIN roles ON users.role_id = roles.id
+          WHERE users.email = :email LIMIT 1'
+        );
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
 
@@ -30,7 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $_SESSION['user'] = [
         'id' => $user['id'],
         'name' => $user['username'],
-        'email' => $email
+        'email' => $email,
+        'role' => $user['role']
       ];
 
       header('Location: ../dashboard.php', true, 303);
